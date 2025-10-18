@@ -1,3 +1,4 @@
+BEGIN TRAN
 /*CREATE TABLE [dbo].[CapturedPlans]*/
 CREATE TABLE [dbo].[CapturedPlans](
   [name] [nvarchar](max) NULL,
@@ -393,8 +394,8 @@ AS
   SELECT  
     p.[CapturedPlans_id]
 		,cp.[database_name]
-    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterCompiledValue + ' ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [column]) AS [name_type_compiled_runtime]
-    ,qts.[cputime]
+    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterCompiledValue + ' ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [Column]) AS [name_type_compiled_runtime]
+    ,qts.[CpuTime]
     ,qts.[ElapsedTime]
     ,qts.[UdfCpuTime]
 		,qts.[UdfElapsedTime]
@@ -412,7 +413,7 @@ AS
   GROUP BY 
      p.[CapturedPlans_id]
 		,cp.[database_name]
-    ,qts.[cputime]
+    ,qts.[CpuTime]
     ,qts.[ElapsedTime]
     ,qts.[UdfCpuTime]
 		,qts.[UdfElapsedTime]
@@ -427,8 +428,8 @@ AS
   SELECT  
     p.CapturedPlans_id 
     ,cp.timestamp
-    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterCompiledValue ,', ')WITHIN GROUP (order by [column]) AS [parameter_info]
-    ,qts.cputime
+    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterCompiledValue ,', ')WITHIN GROUP (order by [Column]) AS [parameter_info]
+    ,qts.CpuTime
     ,qts.ElapsedTime
     ,ss.QueryHash
     ,ss.QueryPlanHash
@@ -442,7 +443,7 @@ AS
     p.ParameterCompiledValue IS NOT NULL
   GROUP BY 
     p.CapturedPlans_id
-    ,qts.cputime
+    ,qts.CpuTime
     ,qts.ElapsedTime
     ,ss.QueryHash
     ,ss.QueryPlanHash
@@ -455,8 +456,8 @@ AS
   SELECT  
     p.CapturedPlans_id 
     ,cp.timestamp
-    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [column]) AS [parameter_info]
-    ,qts.cputime
+    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [Column]) AS [parameter_info]
+    ,qts.CpuTime
     ,qts.ElapsedTime
     ,ss.QueryHash
     ,ss.QueryPlanHash
@@ -470,7 +471,7 @@ AS
     p.ParameterCompiledValue IS NOT NULL
   GROUP BY 
     p.CapturedPlans_id
-    ,qts.cputime
+    ,qts.CpuTime
     ,qts.ElapsedTime
     ,ss.QueryHash
     ,ss.QueryPlanHash
@@ -915,7 +916,7 @@ SELECT
             FROM 
                 [dbo].[RunTimeCountersPerThread] RTC2
             WHERE 
-                RTC2.relop_id = RTC.Relop_id
+                RTC2.[Relop_id] = RTC.Relop_id
             GROUP BY  
                 RTC2.[Relop_id],
                 RTC2.[NodeId]
@@ -981,6 +982,7 @@ WHERE
 	[ModificationCount] > 0 AND 
 	LastUpdate < (DATEADD(day, -7,(SELECT GETDATE())));
 GO
+COMMIT
 /*
 	[dbo].[CapturedPlans]
 	top

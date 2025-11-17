@@ -676,7 +676,7 @@ $Query = "SELECT
           FROM 
             $TableAPLans"
 Write-Output ("Start retrieve data from db " + (Get-Date))
-try 
+try  
 {
   $cn = new-object System.Data.SqlClient.SqlConnection("Data Source=$ServerName;Integrated Security=SSPI;Initial Catalog=$DbName")
   $cn.Open()

@@ -56,7 +56,8 @@ SELECT TOP (1000)
 	,[CompileMemory]
 FROM 
 	[dbo].[QueryPlan]
-WHERE [NonParallelPlanReason] IS NOT NULL
+WHERE
+	[NonParallelPlanReason] IS NOT NULL
 
 SELECT TOP (1000) * FROM [dbo].[MissingIndex]
 SELECT TOP (1000) * FROM [dbo].[Warnings]

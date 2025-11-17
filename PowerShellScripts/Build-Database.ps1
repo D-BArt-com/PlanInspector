@@ -19,8 +19,26 @@ $StartTime = Get-Date
 #==================================================================================================
 #Drop and create output database.
 #==================================================================================================
-$Query ="IF EXISTS (SELECT * FROM sys.databases WHERE [name] = '$DbName')
+$Query =" USE master;
+          GO
+          
+          IF EXISTS (SELECT * FROM sys.databases WHERE [name] = '$DbName')
           BEGIN
+            DECLARE @sql NVARCHAR(MAX) = N'';
+            DECLARE @spid INT;
+            /* build and execute KILL statements for every other SPID using that DB */
+            SELECT @sql = STRING_AGG(N'KILL ' + CONVERT(varchar(5), session_id) + N';', CHAR(13))
+            FROM 
+              sys.dm_exec_sessions
+            WHERE 
+              database_id = DB_ID('$DbName')
+            AND 
+            session_id <> @@SPID;  /* don’t kill yourself */
+
+            IF @sql IS NOT NULL
+            BEGIN
+              EXEC sys.sp_executesql @sql;
+            END
             ALTER DATABASE [$DbName] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
             DROP DATABASE  [$DbName];
           END;

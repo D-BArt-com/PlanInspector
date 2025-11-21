@@ -1,5 +1,5 @@
 /*Slide*/
-IF EXISTS (SELECT * FROM [master].[sys].[server_event_sessions] WHERE NAME = 'QueryPlanLWP')
+IF EXISTS (SELECT * FROM [master].[sys].[server_event_sessions] WHERE name = 'QueryPlanLWP')
 BEGIN 
     DROP EVENT SESSION [QueryPlanLWP] ON SERVER 
 END;
@@ -21,14 +21,12 @@ ADD EVENT sqlserver.query_post_execution_plan_profile
   (
     ( [sqlserver].[equal_i_sql_unicode_string]([sqlserver].[database_name],N'AdventureWorks2017') OR 
       [sqlserver].[equal_i_sql_unicode_string]([sqlserver].[database_name],N'AdventureWorks2019') OR 
-      [sqlserver].[equal_i_sql_unicode_string]([sqlserver].[database_name],N'StackOverflow') OR 
-      [sqlserver].[equal_i_sql_unicode_string]([sqlserver].[database_name],N'DataTypes2017') OR 
-      [sqlserver].[equal_i_sql_unicode_string]([sqlserver].[database_name],N'DataTypesMix')
+      [sqlserver].[equal_i_sql_unicode_string]([sqlserver].[database_name],N'StackOverflow')
     ) AND 
     [sqlserver].[is_system]=(0)
   )
 )
-ADD TARGET package0.event_file (SET filename = N'C:\Temp\XEL\QueryPlanLWP.xel',max_file_size=(1024),max_rollover_files=(5))
+ADD TARGET package0.event_file (SET filename = N'C:\XEL\QueryPlanLWP.xel',max_file_size=(1024),max_rollover_files=(5))
 WITH
 (
   MAX_MEMORY            = 24MB,

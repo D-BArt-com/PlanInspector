@@ -1,34 +1,48 @@
 <ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
-<StmtSimple StatementType="SELECT" StatementSubTreeCost="14" StatementEstRows="1" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="170" BatchModeOnRowStoreUsed="true">
-	<QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="MaxDOPSetToOne" MemoryGrant="168" CachedPlanSize="64" CompileTime="2" CompileCPU="2" CompileMemory="744">
-		<Warnings>
-		  <PlanAffectingConvert ConvertIssue="Cardinality Estimate" Expression="CONVERT(varchar(30),[Id],0)" />
-		  <MemoryGrantWarning GrantWarningKind="Excessive Grant" RequestedMemory="1334" GrantedMemory="1334" MaxUsedMemory="180" />
-		</Warnings>
-		<OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="3072" EstimatedPagesCached="3072" EstimatedAvailableDegreeOfParallelism="8" MaxCompileMemory="351" />
-		<OptimizerStatsUsage>
-			<StatisticsInfo LastUpdate="2017-10-27T14:33:08.68" ModificationCount="0" SamplingPercent="100" Statistics="[IX_Phone]" Table="[Person]" Schema="[dbo]" Database="[Northwind]" />
-		</OptimizerStatsUsage>
-		<QueryTimeStats ElapsedTime="142" CpuTime="126" UdfElapsedTime="109" UdfCpuTime="109" />
-		<TraceFlag Value="9130" Scope="Session" />
-		<WaitStats>
-			<Wait WaitType="ASYNC_NETWORK_IO" WaitTimeMs="314" WaitCount="108" />
-			<Wait WaitType="MEMORY_ALLOCATION_EXT" WaitTimeMs="1" WaitCount="304" />
-		</WaitStats>
-		<RelOp NodeId="1" PhysicalOp="Merge Join" LogicalOp="Inner Join" EstimateRows="8" EstimateIO="3" EstimateCPU="5" AvgRowSize="9" EstimatedTotalSubtreeCost="5.8" Parallel="1" EstimatedExecutionMode="Row"/>
-		<RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateRowsWithoutRowGoal="2.4" EstimatedRowsRead="2.4" EstimateIO="0.31" EstimateCPU="0.59" AvgRowSize="9" EstimatedTotalSubtreeCost="0.32" TableCardinality="1.50785e+08" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row"/>
-		<RunTimeInformation>
-			<RunTimeCountersPerThread Thread="4" ActualRows="0" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
-			<RunTimeCountersPerThread Thread="3" ActualRows="0" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
-			<RunTimeCountersPerThread Thread="2" ActualRows="0" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
-			<RunTimeCountersPerThread Thread="1" ActualRows="2565" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
-			<RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" />
-		</RunTimeInformation>
-		<ParameterList>
-			<ColumnReference Column="@ModifiedDate" ParameterDataType="date" ParameterCompiledValue="'2005-01-01'" ParameterRuntimeValue="'2005-01-01'" />
-		</ParameterList>
-	</QueryPlan>
-</StmtSimple>
+
+	<StmtSimple StatementType="SELECT" StatementSubTreeCost="14" StatementEstRows="1" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" CardinalityEstimationModelVersion="170" BatchModeOnRowStoreUsed="true">
+		
+		<QueryPlan DegreeOfParallelism="0" NonParallelPlanReason="MaxDOPSetToOne" MemoryGrant="168" CachedPlanSize="64" CompileTime="2" CompileCPU="2" CompileMemory="744">
+		
+			<Warnings>
+				<PlanAffectingConvert ConvertIssue="Cardinality Estimate" Expression="CONVERT(varchar(30),[Id],0)" />
+				<MemoryGrantWarning GrantWarningKind="Excessive Grant" RequestedMemory="1334" GrantedMemory="1334" MaxUsedMemory="180" />
+			</Warnings>
+			
+			<MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="1024" RequiredMemory="1331" DesiredMemory="6585" RequestedMemory="6585" GrantWaitTime="0" GrantedMemory="6585" MaxUsedMemory="1768" MaxQueryMemory="6939496" LastRequestedMemory="0" IsMemoryGrantFeedbackAdjusted="No: First Execution" />
+			
+			<OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="3072" EstimatedPagesCached="3072" EstimatedAvailableDegreeOfParallelism="8" MaxCompileMemory="351" />
+			
+			<OptimizerStatsUsage>
+				<StatisticsInfo LastUpdate="2017-10-27T14:33:08.68" ModificationCount="0" SamplingPercent="100" Statistics="[IX_Phone]" Table="[Person]" Schema="[dbo]" Database="[Northwind]" />
+			</OptimizerStatsUsage>
+			
+			<QueryTimeStats ElapsedTime="142" CpuTime="126" UdfElapsedTime="109" UdfCpuTime="109" />
+			
+			<TraceFlag Value="9130" Scope="Session" />
+			
+			<WaitStats>
+				<Wait WaitType="ASYNC_NETWORK_IO" WaitTimeMs="314" WaitCount="108" />
+				<Wait WaitType="MEMORY_ALLOCATION_EXT" WaitTimeMs="1" WaitCount="304" />
+			</WaitStats>
+			
+			<RelOp NodeId="3" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimateRowsWithoutRowGoal="2.4" EstimatedRowsRead="2.4" EstimateIO="0.31" EstimateCPU="0.59" AvgRowSize="9" EstimatedTotalSubtreeCost="0.32" TableCardinality="1.50785e+08" Parallel="true" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+			
+				<RunTimeInformation>
+					<RunTimeCountersPerThread Thread="4" ActualRows="0" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
+					<RunTimeCountersPerThread Thread="3" ActualRows="0" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
+					<RunTimeCountersPerThread Thread="2" ActualRows="0" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
+					<RunTimeCountersPerThread Thread="1" ActualRows="2565" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" />
+					<RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" />
+				</RunTimeInformation>
+			</RelOp>
+			
+			<ParameterList>
+				<ColumnReference Column="@ModifiedDate" ParameterDataType="date" ParameterCompiledValue="'2005-01-01'" ParameterRuntimeValue="'2005-01-01'" />
+			</ParameterList>
+			
+		</QueryPlan>
+	</StmtSimple>
 </ShowPlanXML>
 
 

@@ -362,15 +362,15 @@ AS
     [dbo].[Relop].[CapturedPlans_id],
     [dbo].[RunTimeCountersPerThread].[NodeId],
     [dbo].[Relop].[PhysicalOp],
+    CASE 
+      WHEN SUM([dbo].[RunTimeCountersPerThread].[ActualRows]) = 0 THEN 0
+      ELSE CONVERT(int,100/(SUM([dbo].[RunTimeCountersPerThread].[ActualRows])) *  (COALESCE ([dbo].[Relop].[EstimateNumberOfRowsForAllExecutions],[dbo].[Relop].[EstimateRows],0)))
+    END AS [perc1],
     SUM([dbo].[RunTimeCountersPerThread].[ActualRows]) AS [Sum_ActualRows],
     COALESCE ([dbo].[Relop].[EstimateNumberOfRowsForAllExecutions],[dbo].[Relop].[EstimateRows]) AS [Sum_EstimateRows],
     [dbo].[Relop].[EstimateRows],
     [dbo].[Relop].[EstimateNumberOfExecutions],
     [dbo].[Relop].[EstimateNumberOfRowsForAllExecutions],
-    CASE 
-      WHEN SUM([dbo].[RunTimeCountersPerThread].[ActualRows]) = 0 THEN 0
-        ELSE 100/(SUM([dbo].[RunTimeCountersPerThread].[ActualRows])) *  (COALESCE ([dbo].[Relop].[EstimateNumberOfRowsForAllExecutions],[dbo].[Relop].[EstimateRows],0)) 
-      END AS [perc1],
     [dbo].[StmtSimple].[QueryHash],
     [dbo].[StmtSimple].[QueryPlanHash]
   FROM 
@@ -394,7 +394,7 @@ AS
   SELECT  
     p.[CapturedPlans_id]
 		,cp.[database_name]
-    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterCompiledValue + ' ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [Column]) AS [name_type_compiled_runtime]
+    ,STRING_AGG(p.[Column] + '  |  ' + p.ParameterDataType  + '  |  '   + p.ParameterCompiledValue + '  |  '   + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [Column]) AS [name_type_compiled_runtime]
     ,qts.[CpuTime]
     ,qts.[ElapsedTime]
     ,qts.[UdfCpuTime]
@@ -428,7 +428,7 @@ AS
   SELECT  
     p.CapturedPlans_id 
     ,cp.timestamp
-    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterCompiledValue ,', ')WITHIN GROUP (order by [Column]) AS [parameter_info]
+    ,STRING_AGG(p.[Column] + '  |  ' + p.ParameterDataType  + '  |  ' + p.ParameterCompiledValue ,', ')WITHIN GROUP (order by [Column]) AS [parameter_info]
     ,qts.CpuTime
     ,qts.ElapsedTime
     ,ss.QueryHash
@@ -456,7 +456,7 @@ AS
   SELECT  
     p.CapturedPlans_id 
     ,cp.timestamp
-    ,STRING_AGG(p.[Column] + ' ' + p.ParameterDataType  + ' ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [Column]) AS [parameter_info]
+    ,STRING_AGG(p.[Column] + '  |  ' + p.ParameterDataType  + '  |  ' + p.ParameterRuntimeValue,', ')WITHIN GROUP (order by [Column]) AS [parameter_info]
     ,qts.CpuTime
     ,qts.ElapsedTime
     ,ss.QueryHash
@@ -516,16 +516,18 @@ GO
 CREATE VIEW [dbo].[vw_QueryWithUdf]
 AS 
 SELECT 
-	 CP.[CapturedPlans_id]
-	,TRY_CONVERT(XML,CP.showplan_xml) AS [showplan_xml]
-	,[UdfCpuTime]
-	,[UdfElapsedTime]
+	 cp.[CapturedPlans_id]
+	,TRY_CONVERT(XML,cp.showplan_xml) AS [showplan_xml]
+	,qts.[CpuTime]
+	,qts.[ElapsedTime]
+	,qts.[UdfCpuTime]
+	,qts.[UdfElapsedTime]
 FROM 
-	[dbo].[QueryTimeStats] QTS
+	[dbo].[QueryTimeStats] qts
 		INNER JOIN 
-	[dbo].[CapturedPlans] CP ON QTS.CapturedPlans_id = CP.CapturedPlans_id
+	[dbo].[CapturedPlans] cp ON qts.CapturedPlans_id = cp.CapturedPlans_id
 WHERE 
-	QTS.[UdfCpuTime] IS NOT NULL
+	qts.[UdfCpuTime] IS NOT NULL
 GO
 /*Create view [dbo].[vw_PlanWarning_MemoryGrantWarning]*/
 CREATE VIEW [dbo].[vw_PlanWarning_MemoryGrantWarning]
@@ -787,6 +789,7 @@ AS
 		,cp.showplan_xml
 		,cp.sql_text
 GO*/
+GO
 /*CREATE VIEW [dbo].[vw_Hashes]*/
 CREATE VIEW [dbo].[vw_Hashes]
 AS 
